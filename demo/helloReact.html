@@ -1,45 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Hello React</title>
     <script src="../build/react.js"></script>
     <script src="../build/JSXTransformer.js"></script>
     <script src="../build/jquery.min.js"></script>
 </head>
 <body>
-<div id="example"></div>
+<div id="content"></div>
 <script type="text/jsx">
-    var UserGist = React.createClass({
-        getInitialState: function(){
-            return {
-                username: '',
-                lastGistUrl: ''
-            }
-        },
-        componentDidMount: function(){
-            $.get(this.props.source, function(result){
-                var lastGist = result[0];
-                if(this.isMounted()){
-                    this.setState({
-                        username: lastGist.owner.login,
-                        lastGistUrl: lastGist.html_url
-                    });
-                }
-            }.bind(this))
-        },
+    var Comment = React.createClass({
         render: function(){
             return (
-                <div>
-                    {this.state.username}'s last gist is {this.state.lastGistUrl}
-                    <a href={this.state.lastGistUrl}>here</a>
+                <div className="comment">
+                    <h2 className="commentAuthor">
+                        {this.props.author}
+                    </h2>
+                    {this.props.children}
                 </div>
             )
         }
-    })
+    });
 
-    React.render( 
-        <UserGist source="https://api.github.com/users/octocat/gists" />,   
-        document.getElementById('example')
-    ); 
+    var CommentList = React.createClass({
+        render: function() {
+            return (
+                <div className="commentList">
+                    <Comment author="Pete Hunt">This is one comment</Comment>
+                    <Comment author="Jordan Walke">This is *another* comment</Comment>
+                </div>
+            );
+        }
+    });
+
+    var CommentForm = React.createClass({
+        render: function() {
+            return (
+                <div className="commentForm">
+                    Hello, world! I am a CommentForm.
+                </div>
+            );
+        }
+    });
+
+    var CommentBox = React.createClass({
+        render: function() {
+            return (
+                <div className="commentBox">
+                    <h1>Comments</h1>
+                    <CommentList />
+                    <CommentForm />
+                </div>
+            );
+        }
+    });
+    React.render(
+        <CommentBox />,
+        document.getElementById('content')
+    );
 </script>
 </body>
 </html>

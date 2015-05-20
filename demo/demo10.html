@@ -3,41 +3,43 @@
 <head>
     <script src="../build/react.js"></script>
     <script src="../build/JSXTransformer.js"></script>
+    <script src="../build/jquery.min.js"></script>
 </head>
 <body>
 <div id="example"></div>
 <script type="text/jsx">
-    var Hello = React.createClass({
+    var UserGist = React.createClass({
         getInitialState: function(){
             return {
-                opacity: 1.0
+                username: '',
+                lastGistUrl: ''
             }
         },
         componentDidMount: function(){
-            this.timer = setInterval(function(){
-                var opacity = this.state.opacity;
-                opacity -= .05;
-                if(opacity < 0.1){
-                    opacity = 1.0;
+            $.get(this.props.source, function(result){
+                var lastGist = result[0];
+                if(this.isMounted()){
+                    this.setState({
+                        username: lastGist.owner.login,
+                        lastGistUrl: lastGist.html_url
+                    });
                 }
-                this.setState({
-                    opacity: opacity
-                })
-            }.bind(this), 100);
+            }.bind(this))
         },
         render: function(){
             return (
-                <div style={{opacity: this.state.opacity}}>
-                    Hello {this.props.name}
+                <div>
+                    {this.state.username}'s last gist is {this.state.lastGistUrl}
+                    <a href={this.state.lastGistUrl}>here</a>
                 </div>
             )
         }
     })
 
-    React.render(
-        <Hello name='world'/>,
+    React.render( 
+        <UserGist source="https://api.github.com/users/octocat/gists" />,   
         document.getElementById('example')
-    )
+    ); 
 </script>
 </body>
 </html>

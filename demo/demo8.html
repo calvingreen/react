@@ -7,25 +7,26 @@
 <body>
 <div id="example"></div>
 <script type="text/jsx">
-    var LikeButton = React.createClass({
+    var Input = React.createClass({
         getInitialState: function(){
-            return {liked: false};
+            return {value: 'Hello!'};
         },
-        handleClick: function(){
-            this.setState({liked: !this.state.liked});
+        handleChange: function(event){
+            this.setState({value: event.target.value});
         },
         render: function(){
-            var text = this.state.liked ? 'like' : 'haven\'t liked';
+            var value = this.state.value;
             return (
-                <p onClick={this.handleClick}>
-                    You {text} this. Click to toggle.
-                </p>
-            );
+                <div>
+                    <input type='text' value={value} onChange={this.handleChange} />
+                    <p>{value}</p>
+                </div>
+            )
         }
-    });
+    })
 
     React.render(
-        <LikeButton />,
+        <Input />,
         document.getElementById('example')
     )
 </script>
